@@ -108,10 +108,11 @@
     
 </template>
 <script>
-import BScroll from 'better-scroll'
+// import BScroll from 'better-scroll'
 //import BScroll from '@better-scroll/core'
-
-
+import BetterScroll from 'better-scroll'
+// import Pullup from '@better-scroll/pull-up'
+// BetterScroll.use(Pullup)
 export default {
     name:'category',
     data(){
@@ -124,7 +125,22 @@ export default {
     },
     mounted(){
         console.log(document.querySelector('.wrapper'))
-        this.scroll = new BScroll(document.querySelector('.wrapper'),{})
+        this.scroll = new BetterScroll(document.querySelector('.wrapper'),{
+            probeType:3,
+            pullUpLoad:true
+        })
+         this.scroll.on('scroll',(position)=>{
+             console.log(position)
+         })
+         this.scroll.on('pullingUp',()=>{
+            console.log('上拉加载更多');
+            console.log('up more')
+            //先发送网络请求，新的数据展示完后，再调用一次 this.scroll.finishPullUp()
+            this.scroll.finishPullUp()
+            // setTimeout(function() {
+            //     this.scroll.finishPullUp();
+            // }, 2000)
+         })
     }
 }
 </script>
@@ -132,7 +148,7 @@ export default {
 .wrapper{
     height: 150px;
     background-color: #ddd;
-    /* overflow: hidden; */
+    overflow: hidden;
     /* overflow-y: scroll; */
 }
 
